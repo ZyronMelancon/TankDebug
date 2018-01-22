@@ -7,9 +7,10 @@ public class TankMovement : MonoBehaviour {
     public float moveForce = 5f;
     public float hoverForce = 10f;
     public float hoverHeight = 1f;
+    public float topSpeed = 25f;
 
     Rigidbody self;
-    private float MouseAim;
+    private float MouseAimX;
 
 	// Use this for initialization
 	void Start ()
@@ -20,17 +21,13 @@ public class TankMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        MouseAim = Input.GetAxis("Mouse X");
+        MouseAimX += Input.GetAxis("Mouse X");
 
-        Move();
-        Hover();
+        Move(Hover());
         Steer();
-
-        Debug.Log(transform.rotation.y);
-        Debug.Log(MouseAim);
 	}
 
-    void Hover()
+    bool Hover()
     {
         Ray ray = new Ray(transform.position, -transform.up);
         RaycastHit hit;
@@ -41,17 +38,28 @@ public class TankMovement : MonoBehaviour {
             Vector3 force = Vector3.up * dist * hoverForce;
             self.AddRelativeForce(force, ForceMode.Acceleration);
         }
+
+        return Physics.Raycast(ray, out hit, hoverHeight);
     }
 
     void Steer()
     {
-        self.AddRelativeTorque(new Vector3(0, MouseAim, 0));
+
+        self.AddRelativeTorque(new Vector3(0, self.rotation.y - MouseAimX * Mathf.PI / 180, 0) * 100);
     }
 
-    void Move()
+    void Move(bool isGrounded)
     {
+        if (!isGrounded)
+            return;
+
         Vector3 dir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-        self.AddRelativeForce(dir * moveForce);
+        self.AddRelativeForce(dir * moveForce * self.mass);
+
+        if (dir == Vector3.zero)
+            self.AddRelativeForce(-self.velocity / 3 * self.mass);
+        else
+            self.AddRelativeForce(dir * moveForce * Mathf.Max(0, Vector3.Dot(-self.velocity.normalized, dir)) *self.mass);
     }
 }
