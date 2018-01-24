@@ -24,7 +24,7 @@ public class TankMovement : MonoBehaviour {
         MouseAimX += Input.GetAxis("Mouse X");
 
         Move(Hover());
-        Steer();
+        //Steer();
 	}
 
     bool Hover()

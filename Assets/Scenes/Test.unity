@@ -261,8 +261,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveForce: 5
-  hoverForce: 10
-  hoverHeight: 0.6
+  hoverForce: 15
+  hoverHeight: 1
   topSpeed: 25
 --- !u!136 &302391619
 CapsuleCollider:
