@@ -11,55 +11,117 @@ public class TankMovement : MonoBehaviour {
 
     Rigidbody self;
     private float MouseAimX;
-
-	// Use this for initialization
+    Ray ray, rayT, rayL, rayR, rayB;
+    Vector3 offset;
+    Vector3 offset2;
+    GameObject camera;
+    
 	void Start ()
     {
         self = GetComponent<Rigidbody>();
-	}
+
+        camera = GameObject.FindGameObjectWithTag("MainCamera");
+
+        offset = new Vector3(0, 0, 1);
+        offset2 = new Vector3(1, 0, 0);
+    }
 	
-	// Update is called once per frame
 	void Update ()
     {
         MouseAimX += Input.GetAxis("Mouse X");
 
-        Move(Hover());
-        //Steer();
-	}
+        //Are we over the ground?
+        ray = new Ray(transform.position, -transform.up);
+        RaycastHit ground;
 
-    bool Hover()
-    {
-        Ray ray = new Ray(transform.position, -transform.up);
-        RaycastHit hit;
 
-        if(Physics.Raycast(ray, out hit, hoverHeight))
+        //If yes, and not grounded, hover as usual
+        if (Physics.Raycast(ray, out ground, hoverHeight))
         {
-            float dist = (hoverHeight - hit.distance) / hoverHeight;
-            Vector3 force = Vector3.up * dist * hoverForce;
-            self.AddRelativeForce(force, ForceMode.Acceleration);
+            if (Input.GetAxis("Jump") == 0)
+            {
+                Hover(ground);
+            }
         }
+        //If not, try to stay upright until we're over ground again
+        else
+            Rebalance();
 
-        return Physics.Raycast(ray, out hit, hoverHeight);
+        //Can move and steer up to 1 unit above hover height
+        if (Physics.Raycast(ray, out ground, hoverHeight + 1))
+            if (Input.GetAxis("Jump") == 0)
+            {
+                Move();
+                Steer();
+            }
+    }
+
+    void Hover(RaycastHit hit)
+    {
+        rayT = new Ray(transform.position + offset * 2.5f, -transform.up);
+        rayL = new Ray(transform.position - offset2 * 2.5f, -transform.up);
+        rayR = new Ray(transform.position + offset2 * 2.5f, -transform.up);
+        rayB = new Ray(transform.position - offset * 2.5f, -transform.up);
+
+        float dist = (hoverHeight - hit.distance) / hoverHeight;
+        Vector3 force = transform.up * dist * hoverForce;
+
+        self.AddForce(force, ForceMode.Acceleration);
+
+
+        /* if (Physics.Raycast(rayT, out hit, hoverHeight))
+         {
+             float dist2 = (hoverHeight - hit.distance);
+             Vector3 force2 = -offset2 * dist2;
+             self.AddRelativeTorque(force2 * 2);
+         }
+
+         if (Physics.Raycast(rayL, out hit, hoverHeight))
+         {
+             float dist2 = (hoverHeight - hit.distance);
+             Vector3 force2 = -offset * dist2;
+             self.AddRelativeTorque(force2 * 2);
+         }
+
+         if (Physics.Raycast(rayR, out hit, hoverHeight))
+         {
+             float dist2 = (hoverHeight - hit.distance);
+             Vector3 force2 = offset * dist2;
+             Debug.Log(dist);
+             self.AddRelativeTorque(force2 * 2);
+         }
+
+         if (Physics.Raycast(rayB, out hit, hoverHeight))
+         {
+             float dist2 = (hoverHeight - hit.distance);
+             Vector3 force2 = offset2 * dist2;
+             self.AddRelativeTorque(force2 * 2);
+         }*/
     }
 
     void Steer()
     {
-
-        self.AddRelativeTorque(new Vector3(0, self.rotation.y - MouseAimX * Mathf.PI / 180, 0) * 100);
+        var cuck = Quaternion.FromToRotation(transform.forward, camera.transform.forward);
+        Debug.Log(cuck);
+        self.AddTorque(new Vector3(0, Mathf.Min(cuck.y, 0.15f), 0) * 75, ForceMode.Impulse);
     }
 
-    void Move(bool isGrounded)
+    void Move()
     {
-        if (!isGrounded)
-            return;
-
         Vector3 dir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Vector3 dirRel = new Vector3()
 
         self.AddRelativeForce(dir * moveForce * self.mass);
 
         if (dir == Vector3.zero)
-            self.AddRelativeForce(-self.velocity / 3 * self.mass);
+            self.AddForce(-self.velocity / 3 * self.mass);
         else
-            self.AddRelativeForce(dir * moveForce * Mathf.Max(0, Vector3.Dot(-self.velocity.normalized, dir)) *self.mass);
+            self.AddRelativeForce(dir * moveForce * Mathf.Max(0, Vector3.Dot(-self.velocity.normalized, dir)) * self.mass);
+    }
+
+    void Rebalance()
+    {
+        var rot = Quaternion.FromToRotation(transform.up, Vector3.up);
+        self.AddTorque(new Vector3(rot.x, rot.y, rot.z) * 60);
     }
 }

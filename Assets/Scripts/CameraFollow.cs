@@ -7,6 +7,7 @@ public class CameraFollow : MonoBehaviour {
     public Transform target;
     public float offset;
     public float smoothSpeed = 0.3f;
+    public float MouseSens = 1.2f;
 
     float MouseAimX;
     float MouseAimY;
@@ -29,7 +30,7 @@ public class CameraFollow : MonoBehaviour {
         float rot = MouseAimX * Mathf.PI / 180;
         float rot2 = MouseAimY * Mathf.PI / 180;
 
-        Vector3 pos = target.position + new Vector3(offset * -Mathf.Sin(rot), 3, -offset * Mathf.Cos(rot));
+        Vector3 pos = target.position + new Vector3(offset * -Mathf.Sin(rot * MouseSens), 3, -offset * Mathf.Cos(rot * MouseSens));
         Vector3 smoothMove = Vector3.Lerp(transform.position, pos, smoothSpeed);
         //Quaternion smoothRotate = Quaternion.Lerp(transform.rotation, target.rotation, smoothSpeed);
 
