@@ -9,6 +9,8 @@ public class TankMovement : MonoBehaviour {
     public float hoverHeight = 1f;
     public float topSpeed = 25f;
 
+    public ParticleSystem trail;
+
     Rigidbody self;
     private float MouseAimX;
     Ray ray, rayT, rayL, rayR, rayB;
@@ -29,14 +31,15 @@ public class TankMovement : MonoBehaviour {
 	void Update ()
     {
         MouseAimX += Input.GetAxis("Mouse X");
+    }
 
+    private void FixedUpdate()
+    {
         //Are we over the ground?
         ray = new Ray(transform.position, -transform.up);
         RaycastHit ground;
 
         Debug.Log(self.velocity.magnitude);
-
-        
 
         //Will balance to ground slope up to 5 units above ground
         if (Physics.Raycast(ray, out ground, hoverHeight + 10))
@@ -47,9 +50,13 @@ public class TankMovement : MonoBehaviour {
             {
                 Move();
                 Steer();
-                if(ground.distance <= hoverHeight)
+                trail.enableEmission = true;
+                if (ground.distance <= hoverHeight)
                     Hover(ground);
+                
             }
+            else
+                trail.enableEmission = false;
         }
         else
             Rebalance();
@@ -66,9 +73,9 @@ public class TankMovement : MonoBehaviour {
 
     void HoverBalance()
     {
-        rayT = new Ray(transform.position + offset * 2f, -transform.up);
-        rayL = new Ray(transform.position - offset2 * 2f, -transform.up);
-        rayR = new Ray(transform.position + offset2 * 2f, -transform.up);
+        rayT = new Ray(transform.position + offset * 2f, Vector3.down);
+        rayL = new Ray(transform.position - offset2 * 2f, Vector3.down);
+        rayR = new Ray(transform.position + offset2 * 2f, Vector3.down);
 
         RaycastHit balT;
         RaycastHit balL;
