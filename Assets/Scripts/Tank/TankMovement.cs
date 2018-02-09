@@ -5,8 +5,8 @@ using UnityEngine.Networking;
 
 public class TankMovement : NetworkBehaviour {
 
-    public float moveForce = 5f;
-    public float hoverForce = 10f;
+    public float moveForce = 20f;
+    public float hoverForce = 50f;
     public float hoverHeight = 1f;
     public float topSpeed = 25f;
 
@@ -15,7 +15,6 @@ public class TankMovement : NetworkBehaviour {
     Rigidbody self;
     private float MouseAimX;
     Ray ray, rayT, rayL, rayR, rayB;
-    GameObject followCamera;
 
     //Networking player movement
     [SyncVar]
@@ -26,15 +25,13 @@ public class TankMovement : NetworkBehaviour {
     public float jinput;
     [SyncVar]
     private Vector3 mcam;
-    
-	void Start ()
+
+    void Start()
     {
         self = GetComponent<Rigidbody>();
-
-        followCamera = GameObject.FindGameObjectWithTag("MainCamera");
     }
-	
-	void Update ()
+
+    void Update()
     {
         MouseAimX += Input.GetAxis("Mouse X");
     }
@@ -42,15 +39,14 @@ public class TankMovement : NetworkBehaviour {
     private void FixedUpdate()
     {
         //Player movement
-        if(isLocalPlayer)
+        if (isLocalPlayer)
         {
             hinput = Input.GetAxis("Horizontal");
             vinput = Input.GetAxis("Vertical");
             jinput = Input.GetAxis("Jump");
-            mcam = followCamera.transform.forward;
+            mcam = GameObject.FindGameObjectWithTag("MainCamera").transform.forward;
+            CmdInput(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.GetAxis("Jump"), GameObject.FindGameObjectWithTag("MainCamera").transform.forward);
         }
-
-
 
         //Are we over the ground?
         ray = new Ray(transform.position, -transform.up);
@@ -68,7 +64,7 @@ public class TankMovement : NetworkBehaviour {
                 trail.enableEmission = true;
                 if (ground.distance <= hoverHeight)
                     Hover(ground);
-                
+
             }
             else
                 trail.enableEmission = false;
@@ -130,8 +126,8 @@ public class TankMovement : NetworkBehaviour {
         //If we have input, move
         if (dir != Vector3.zero)
         {
-            self.AddRelativeForce(dir * moveForce * self.mass, ForceMode.Force);
-            self.AddRelativeForce(dir * moveForce * Mathf.Max(0, Vector3.Dot(-self.velocity.normalized, relDir)) * self.mass / 2);
+            self.AddRelativeForce(dir * moveForce * self.mass * (-jinput + 1), ForceMode.Force);
+            //self.AddRelativeForce(dir * moveForce * Mathf.Max(0, Vector3.Dot(-self.velocity.normalized, relDir)) * self.mass / 2);
             self.AddForce(-self.velocity * 7.5f);
         }
         //If not, slow down
@@ -148,11 +144,20 @@ public class TankMovement : NetworkBehaviour {
     }
 
     [Command]
-    void CmdInput()
+    void CmdInput(float h, float v, float j, Vector3 m)
     {
-        hinput = Input.GetAxis("Horizontal");
-        vinput = Input.GetAxis("Vertical");
-        jinput = Input.GetAxis("Jump");
-        mcam = followCamera.transform.forward;
+        RpcInput(h,v,j,m);
+    }
+
+    [ClientRpc]
+    void RpcInput(float h, float v, float j, Vector3 m)
+    {
+        if(!isLocalPlayer)
+        {
+            hinput = h;
+            vinput = v;
+            jinput = j;
+            mcam = m;
+        }
     }
 }

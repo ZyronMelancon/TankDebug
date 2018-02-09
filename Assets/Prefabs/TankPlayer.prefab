@@ -195,9 +195,11 @@ GameObject:
   - component: {fileID: 4504906343468682}
   - component: {fileID: 54493995891088552}
   - component: {fileID: 114133064110510292}
-  - component: {fileID: 65202996559528962}
   - component: {fileID: 114452249921882214}
-  - component: {fileID: 114363863874355938}
+  - component: {fileID: 65202996559528962}
+  - component: {fileID: 136635753386189824}
+  - component: {fileID: 136724494121090562}
+  - component: {fileID: 114156889937632220}
   m_Layer: 0
   m_Name: TankPlayer
   m_TagString: Player
@@ -280,7 +282,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1989276738112400}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4020813884509884}
@@ -397,8 +399,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3, y: 1.48, z: 4.2}
-  m_Center: {x: 0, y: 0.6, z: 0}
+  m_Size: {x: 2.5, y: 1.25, z: 3.7}
+  m_Center: {x: 0, y: 0.53, z: 0}
 --- !u!82 &82032514049512020
 AudioSource:
   m_ObjectHideFlags: 1
@@ -643,26 +645,26 @@ MonoBehaviour:
   hinput: 0
   vinput: 0
   jinput: 0
---- !u!114 &114363863874355938
+--- !u!114 &114156889937632220
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1989276738112400}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_TransformSyncMode: 3
-  m_SendInterval: 0.05
+  m_SendInterval: 0.09090909
   m_SyncRotationAxis: 7
   m_RotationSyncCompression: 1
   m_SyncSpin: 1
   m_MovementTheshold: 0.001
   m_VelocityThreshold: 0.0001
   m_SnapThreshold: 5
-  m_InterpolateRotation: 0
+  m_InterpolateRotation: 1
   m_InterpolateMovement: 1
 --- !u!114 &114452249921882214
 MonoBehaviour:
@@ -709,6 +711,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   engine: {fileID: 82103633013111962}
   jet: {fileID: 82032514049512020}
+--- !u!136 &136635753386189824
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1989276738112400}
+  m_Material: {fileID: 13400000, guid: dc7168d140e731e44ab72608ddb1c680, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2.6
+  m_Direction: 0
+  m_Center: {x: 0, y: 0.3, z: 1.98}
+--- !u!136 &136724494121090562
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1989276738112400}
+  m_Material: {fileID: 13400000, guid: dc7168d140e731e44ab72608ddb1c680, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 2.6
+  m_Direction: 0
+  m_Center: {x: 0, y: 0.3, z: -1.97}
 --- !u!137 &137225609323688922
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
