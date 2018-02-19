@@ -29,6 +29,7 @@ public class TankMovement : NetworkBehaviour {
     void Start()
     {
         self = GetComponent<Rigidbody>();
+        StartCoroutine(InputSync());
     }
 
     void Update()
@@ -45,7 +46,6 @@ public class TankMovement : NetworkBehaviour {
             vinput = Input.GetAxis("Vertical");
             jinput = Input.GetAxis("Jump");
             mcam = GameObject.FindGameObjectWithTag("MainCamera").transform.forward;
-            CmdInput(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.GetAxis("Jump"), GameObject.FindGameObjectWithTag("MainCamera").transform.forward);
         }
 
         //Are we over the ground?
@@ -158,6 +158,16 @@ public class TankMovement : NetworkBehaviour {
             vinput = v;
             jinput = j;
             mcam = m;
+        }
+    }
+
+    IEnumerator InputSync()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.1f);
+            if (isLocalPlayer)
+                CmdInput(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), Input.GetAxis("Jump"), GameObject.FindGameObjectWithTag("MainCamera").transform.forward);
         }
     }
 }
