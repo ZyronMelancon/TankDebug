@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 135068061043453152}
   - component: {fileID: 23629307560303612}
   - component: {fileID: 54300826194846362}
+  - component: {fileID: 114761296009744204}
   m_Layer: 0
   m_Name: Shell
   m_TagString: Untagged
@@ -130,6 +131,38 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &114761296009744204
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1448822658572678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 222
+    i1: 236
+    i2: 79
+    i3: 102
+    i4: 111
+    i5: 158
+    i6: 52
+    i7: 196
+    i8: 10
+    i9: 177
+    i10: 154
+    i11: 126
+    i12: 184
+    i13: 66
+    i14: 131
+    i15: 119
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!135 &135068061043453152
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -202,7 +235,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1815369999
+  randomSeed: 457833448
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3474,8 +3507,8 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 145914066afeadc48815a73e4b263190, type: 2}
-  - {fileID: 2100000, guid: 145914066afeadc48815a73e4b263190, type: 2}
+  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
